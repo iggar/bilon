@@ -6,7 +6,8 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [yada "1.2.0"]
                  [aleph "0.4.3"]
-                 [bidi "2.0.12"]]
+                 [bidi "2.0.12"]
+                 [hiccup "1.0.5"]]
   :main ^:skip-aot bilon.server
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
