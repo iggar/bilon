@@ -1,6 +1,7 @@
 (ns bilon.resources
   (:require [yada.yada :refer [listener resource as-resource]]
-            [hiccup.page :refer [html5]]))
+            [hiccup.page :refer [html5]]
+            [bilon.services :refer [get-feed]]))
 
 (defn- welcome []
   (html5 [:body
@@ -12,11 +13,16 @@
       {:produces "text/html"
       :response welcome}))
 
+(defn bike-table []
+  (let [top5 (get-feed "https://api.tfl.gov.uk/BikePoint/" 5)]
+      (apply str (map #(str "name: " (:commonName %) "\n") top5))))
+
+
 (defn- bike-list-page [ctx]
     (html5 [:body
     [:h1 (format "Hello %s!" (get-in ctx [:authentication "default" :user]))]
     [:p "Here is a list of bicycle stations around you right now:"]
-    [:pre (pr-str (get-in ctx [:authentication "default"]))]]))
+    [:pre (bike-table)]]))
 
 (def bike-list
   (resource

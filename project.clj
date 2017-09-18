@@ -7,7 +7,9 @@
                  [yada "1.2.0"]
                  [aleph "0.4.3"]
                  [bidi "2.0.12"]
-                 [hiccup "1.0.5"]]
+                 [hiccup "1.0.5"]
+                 [org.clojure/data.json "0.2.6"]
+                 [clj-http "3.7.0"]]
   :main ^:skip-aot bilon.server
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
