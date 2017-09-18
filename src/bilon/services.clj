@@ -41,3 +41,9 @@
         lat2 (Math/toRadians lat2)
         a (+ (* (Math/sin (/ dlat 2)) (Math/sin (/ dlat 2))) (* (Math/sin (/ dlon 2)) (Math/sin (/ dlon 2)) (Math/cos lat1) (Math/cos lat2)))]
       (* R 2 (Math/asin (Math/sqrt a)))))
+
+(defn point-with-distance [bikepoint]
+  (assoc-in bikepoint [:distance] (haversine {:lat 51.561948 :lng -0.013139} (:lat-lon bikepoint))))
+
+(defn sorted-list-with-distances [bikepoints]
+  (sort-by :distance (map point-with-distance bikepoints)))
