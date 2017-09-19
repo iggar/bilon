@@ -29,12 +29,9 @@
         url "https://www.google.co.uk/maps/search/?api=1&query="
         link (str url lat "," lng)]
     [:tr
-      [:td (:name item)]
-      [:td (str distance-km "km (" distance-mi "mi)")]
-      [:td [:a {:href link} "GMaps"]]]))
-
-;[:a {:href "http://github.com"} "GitHub"]
-
+      [:td [:a {:href link} (:name item)]]
+      [:td {:style "text-align: center;"} (:bikes-free item)]
+      [:td (str distance-km "km (" distance-mi "mi)")]]))
 
 (defn bike-table-html []
   (let [items (bike-table leyton)]
@@ -43,15 +40,16 @@
               [:thead
                 [:tr
                   [:th "Bike Point"]
-                  [:th "Distance"]
-                  [:th "Position"]]]
+                  [:th "# Bikes Available"]
+                  [:th "Distance"]]]
               [:tbody
                 (map bike-row-html items)]])))
 
 (defn- bike-list-page [ctx]
     (html5 [:body
               [:h1 (format "Hello %s!" (get-in ctx [:authentication "default" :user]))]
-              [:p "Here is a list of bicycle stations around you right now:"]
+              [:p "Here is a list of bicycle stations around you right now. "
+                  "Click the link to open the location on Google Maps."]
               (bike-table-html)]))
 
 (def bike-list
