@@ -29,11 +29,14 @@
 (defn simple-list [bikepoints]
   (map point->simplepoint bikepoints))
 
-(defn point-with-distance [bikepoint]
+(defn point-with-distance [from bikepoint]
   (assoc-in bikepoint [:distance]
-    (haversine/haversine {:latitude 51.561948 :longitude -0.013139}
+    (haversine/haversine from
                          {:latitude (:lat (:lat-lon bikepoint))
                           :longitude (:lng (:lat-lon bikepoint))})))
 
-(defn sorted-list-with-distances [bikepoints]
-  (sort-by :distance (map point-with-distance bikepoints)))
+(defn sorted-list-with-distances [from bikepoints]
+  (sort-by :distance (map (partial point-with-distance from) bikepoints)))
+
+(defn nearest-from [location n feed]
+  (take n (sorted-list-with-distances location (simple-list feed))))
