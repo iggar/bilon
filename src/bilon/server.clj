@@ -1,6 +1,6 @@
 (ns bilon.server
   (:require [yada.yada :refer [listener resource as-resource]]
-            [bilon.resources :refer [bike-list main-page]])
+            [bilon.resources :refer [bike-list api-bike-list main-page]])
   (:gen-class))
 
 (defn -main
@@ -12,6 +12,7 @@
                   ["test" (resource {:produces "text/plain"
                                      :response "This is a test!"})]
                   ["bikelist" bike-list]
+                  ["apibikelist" api-bike-list]
                   ["main" main-page]
                   [true (as-resource nil)]]]
                 {:port 3000})]
