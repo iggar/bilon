@@ -12,8 +12,8 @@
                   ["test" (resource {:produces "text/plain"
                                      :response "This is a test!"})]
                   ["bikelist" bike-list]
-                  ["apibikelist" api-bike-list]
                   ["main" main-page]
+                  ["api/bikelist" api-bike-list]
                   [true (as-resource nil)]]]
                 {:port 3000})]
  (println "Server starting...")

@@ -20,11 +20,39 @@
 (defn bike-table [location]
   (nearest-from location num-entries (get-all "https://api.tfl.gov.uk/BikePoint/")))
 
+(defn bike-row-html [item]
+  (let [distance (:distance item)
+        distance-km (format "%.2f" distance)
+        distance-mi (format "%.2f" (/ distance 1.6))
+        lat (:lat (:lat-lon item))
+        lng (:lng (:lat-lon item))
+        url "https://www.google.co.uk/maps/search/?api=1&query="
+        link (str url lat "," lng)]
+    [:tr
+      [:td (:name item)]
+      [:td (str distance-km "km (" distance-mi "mi)")]
+      [:td [:a {:href link} "GMaps"]]]))
+
+;[:a {:href "http://github.com"} "GitHub"]
+
+
+(defn bike-table-html []
+  (let [items (bike-table leyton)]
+        name (:name items)
+    (html5 [:table
+              [:thead
+                [:tr
+                  [:th "Bike Point"]
+                  [:th "Distance"]
+                  [:th "Position"]]]
+              [:tbody
+                (map bike-row-html items)]])))
+
 (defn- bike-list-page [ctx]
     (html5 [:body
-    [:h1 (format "Hello %s!" (get-in ctx [:authentication "default" :user]))]
-    [:p "Here is a list of bicycle stations around you right now:"]
-    [:pre (bike-table leyton)]]))
+              [:h1 (format "Hello %s!" (get-in ctx [:authentication "default" :user]))]
+              [:p "Here is a list of bicycle stations around you right now:"]
+              (bike-table-html)]))
 
 (def bike-list
   (resource
