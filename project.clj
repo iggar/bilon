@@ -9,7 +9,8 @@
                  [bidi "2.0.12"]
                  [hiccup "1.0.5"]
                  [org.clojure/data.json "0.2.6"]
-                 [clj-http "3.7.0"]]
+                 [clj-http "3.7.0"]
+                 [haversine "0.1.1"]]
   :main ^:skip-aot bilon.server
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
