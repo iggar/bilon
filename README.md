@@ -55,6 +55,25 @@ curl -u juxt:txuj http://localhost:3000/api/bikelist
 ```
 
 
+The response is returned on the following format (distance is given in km):
+
+```
+{
+
+    "name": "Chapel Place, Marylebone",
+    "bikes-free": "5",
+    "lat-lon": {
+        "lat": 51.515308,
+        "lng": -0.147203
+    },
+    "distance": 0.09460539697692726
+
+}
+```
+
+
+
+
 #### `GET /bikelist`
 
 Returns the results as an HTML page with a table and links to Google Maps.

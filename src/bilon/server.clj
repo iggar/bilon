@@ -9,13 +9,12 @@
  (let [listen (listener
                 ["/"
                  [
-                  ["hello" (as-resource "Hello World!")]
-                  ["bikelist" bike-list]
                   ["main" main-page]
+                  ["bikelist" bike-list]
                   ["api/bikelist" api-bike-list]
                   ["healthcheck" (resource {:produces "text/plain"
                                             :response "This is fine!"})]
                   [true (as-resource nil)]]]
                 {:port config/port})]
- (println "Server starting...")
+ (println "Server starting at port " config/port "...")
   @(promise))) ;prevents the server from dying
