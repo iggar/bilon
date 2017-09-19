@@ -1,24 +1,23 @@
 (ns bilon.resources
   (:require [yada.yada :refer [listener resource as-resource]]
             [hiccup.page :refer [html5]]
-            [bilon.services :refer [nearest-from get-all]]))
-
-
-(def ^:const leyton {:latitude 51.561948 :longitude -0.013139})
-(def ^:const num-entries 5)
+            [bilon.services :refer [nearest-from get-all]]
+            [bilon.helpers.config :as config]))
 
 (defn- welcome []
   (html5 [:body
         [:h1 "Bilon"]
-        [:h2 "List of public bicycle stations in London"]]))
+        [:h2 "List of public bicycle stations in London"]
+        [:h3 "Current configuration"]
+        [:pre (str (config/all))]]))
 
 (def main-page
   (resource
       {:produces "text/html"
-      :response welcome}))
+      :response (welcome)}))
 
 (defn bike-table [location]
-  (nearest-from location num-entries (get-all "https://api.tfl.gov.uk/BikePoint/")))
+  (nearest-from location config/num-results (get-all "https://api.tfl.gov.uk/BikePoint/")))
 
 (defn bike-row-html [item]
   (let [distance (:distance item)
@@ -33,8 +32,11 @@
       [:td {:style "text-align: center;"} (:bikes-free item)]
       [:td (str distance-km "km (" distance-mi "mi)")]]))
 
+(defn- bike-list-json []
+   (bike-table config/base-coordinates))
+
 (defn bike-table-html []
-  (let [items (bike-table leyton)]
+  (let [items (bike-list-json)]
         name (:name items)
     (html5 [:table
               [:thead
@@ -45,9 +47,10 @@
               [:tbody
                 (map bike-row-html items)]])))
 
-(defn- bike-list-page [ctx]
+(defn- bike-list-page []
     (html5 [:body
-              [:h1 (format "Hello %s!" (get-in ctx [:authentication "default" :user]))]
+              [:h1 "Welcome to BiLon"]
+              [:h2 "Find a public bicycle near you."]
               [:p "Here is a list of bicycle stations around you right now. "
                   "Click the link to open the location on Google Maps."]
               (bike-table-html)]))
@@ -57,18 +60,7 @@
    {:id :bilon-resource/bike-list
     :methods
     {:get {:produces "text/html"
-           :response (fn [ctx] (bike-list-page ctx))}}
-
-    :access-control
-    {:scheme "Basic"
-     :verify (fn [[user password]]
-               (when (and (= user "juxt") (= password "txuj"))
-                 {:user user
-                  :roles #{:user}}))
-     :authorization {:methods {:get :user}}}}))
-
-(defn- bike-list-json []
-   (bike-table leyton))
+           :response (bike-list-page)}}}))
 
 (def api-bike-list
    (resource
